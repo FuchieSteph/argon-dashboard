@@ -37,7 +37,7 @@
             background-color: #212e3d !important;
         }
 
-        .sidenav .menu-sub .nav-item.active:hover {
+        .sidenav .menu-sub .nav-item.active:hover, .sidenav .nav-item.active .nav-link:hover {
             background-color: #5a8dee !important;
             color: white;
         }
@@ -51,4 +51,8 @@
 
         .navbar-nav .nav-link.show, .navbar-nav .menu-sub.show {
             background:transparent !important;
+        }
+
+        .table .selected {
+            background-color: navajowhite;
         }

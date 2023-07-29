@@ -35,10 +35,6 @@
     border-right: 0;
   }
 
-  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
-    border-left: $white !important;
-  }
-
   &.focused {
     .input-group-text {
       border-color: $primary !important;

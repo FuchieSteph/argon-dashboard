@@ -33,7 +33,8 @@ const gulp = require('gulp'),
   babel = require('gulp-babel'),
   uglify = require('gulp-uglify'),
   cleanCSS = require('gulp-clean-css'),
-  packageJSON = require('./package.json');
+  packageJSON = require('./package.json'),
+  webpack = require('webpack-stream');
 
 const env = ['dev', 'dist'];
 
@@ -48,6 +49,7 @@ copyAndMergeSCSS('theme', 'argon-dashboard.scss');
 copyAndMergeSCSS('datatables', 'datatables.scss');
 buildJS('argon-dashboard', 'argon-dashboard', path.src_js + '/argon-dashboard.js');
 buildJS('datatables', 'datatables', path.src_js + '/datatables.js');
+buildJS('bootstrap_admin', 'bootstrap_admin', path.src_js + '/django-admin.js');
 copyFiles('fonts');
 copyFiles('img');
 
@@ -99,36 +101,37 @@ function copyAndMergeSCSS(taskname, file) {
 // JS compiling and minification
 function buildJS(taskname, outputFileName, filePattern = `${path.src_js}/**/*.js`) {
   env.forEach((env_name) => {
-    tasks[env_name].push(`${taskname}:${env_name}`);
     tasks[env_name].push(`${taskname}:minified:${env_name}`);
-
-    gulp.task(`${taskname}:${env_name}`, () =>
-      gulp
-        .src(filePattern)
-        .pipe(rollup({
-          plugins: [babel({ presets: ['@babel/preset-env'] })],
-          input: glob.sync(filePattern),
-          output: {
-            format: 'iife',
-          },
-        }))
-        .pipe(concat(`${outputFileName}.js`))
-        .pipe(gulp.dest(path[`${env_name}_js`]))
-    );
 
     gulp.task(`${taskname}:minified:${env_name}`, () =>
       gulp.src(filePattern)
-        .pipe(rollup({
-          plugins: [babel({ presets: ['@babel/preset-env'] })],
-          input: glob.sync(filePattern),
-          output: {
-            format: 'iife',
-          },
+        .pipe(babel({ presets: ['@babel/preset-env']}))
+        .pipe(
+          webpack({
+            mode: 'production',
+            entry: './'+filePattern,
+            output: {
+              filename: `${outputFileName}.js`,
+            },
+            module: {
+              rules: [
+                {
+                  test: /\.js$/,
+                  exclude: /node_modules/,
+                  use: {
+                    loader: 'babel-loader',
+                    options: {
+                      presets: ['@babel/preset-env'],
+                    },
+                  },
+                },
+              ],
+            },
         }))
         .pipe(concat(`${outputFileName}.min.js`))
         .pipe(uglify({ output: { comments: /^!|@version/i } }))
         .pipe(gulp.dest(path[`${env_name}_js`]))
-    );
+     );
   });
 }
 
