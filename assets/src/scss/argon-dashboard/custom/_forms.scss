@@ -1,0 +1,66 @@
+.d-flex {
+    .form-label {
+        margin-bottom: 0px;
+        margin-right: 15px;
+    }
+}
+
+.checkbox-row {
+    &.d-flex {
+        align-items: center;
+    }
+}
+
+.inline-related {
+    h3 {
+        .inline_label {
+            margin-left: 15px;
+            font-weight: 500;
+        }
+    }
+
+    .form-control {
+        max-width: 70%;
+    }
+
+    .d-flex {
+        max-width: 70%;
+        align-items: center;
+    }
+}
+
+input[type=submit] {
+    width: fit-content;
+}
+
+.selector {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    h2 {
+            font-size: 12px;
+    }
+}
+
+.selector-available,
+.selector-choosen {
+    width: 300px;
+}
+
+fieldset h2 {
+    display: none;
+}
+
+.nav-tabs .nav-link {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+fieldset {
+    .d-flex {
+        @media (max-width: 500px) {
+           display: block !important;
+        }
+    }
+}

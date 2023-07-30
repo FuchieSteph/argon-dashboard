@@ -6,7 +6,9 @@ const ChangeList = {
         this.modifyChangelistSearch();
         this.modifyResultsTable();
         this.addClickToTableRows();
-        this.modifyBreadcrumbs();
+        this.bindQuickActionButtons();
+        this.modifyCheckboxes();
+        this.bindConfirmButton();
     },
 
     convertDetailsToSelect2: function () {
@@ -70,39 +72,91 @@ const ChangeList = {
         $('#cta_block').append($('.actions'));
         $('.paginator').addClass('pagination').find('a').wrap('<div class="page-item me-2"></div>').addClass('page-link');
         $('.pagination span').wrap('<div class="page-item active me-2"></div>').addClass('page-link');
-        $('.field-thumbnail').addClass('w-25');
         $(".results td, .results th").addClass('text-sm font-weight-bold mb-0');
         $(".results th").addClass('text-uppercase');
-
-        if ($("table tr").length > 0) {
-            $("table tr").click(function (e) {
-                if ($(e.target).is(':checkbox')) return; // Ignore when clicking on the checkbox
-                $(this).find(':checkbox').click();
-            });
-        }
     },
 
     addClickToTableRows: function () {
         if ($("table tr").length > 0) {
             $("table tr").click(function (e) {
-                if ($(e.target).is(':checkbox')) return; // Ignore when clicking on the checkbox
+                if ($(e.target).is(':checkbox')) return;
                 $(this).find(':checkbox').click();
             });
         }
     },
 
-    modifyBreadcrumbs: function () {
-        $('.breadcrumb-container').prepend('<ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5"></ol>');
-        $('.breadcrumbs a').addClass('opacity-5 text-white').wrap('<li class="breadcrumb-item text-sm text-white"></li>');
-        $('.breadcrumbs')
-            .contents()
-            .filter(function () {
-                return this.nodeType == 3 && $.trim(this.textContent).length > 3;
-            })
-            .wrap('<li class="breadcrumb-item text-sm text-white active"></li>');
+    bindQuickActionButtons: function () {
+        $('.quick-action-button').on('click', function (event) {
+            const template = $(this).data('template');
+            const url = $(this).data('url');
+            const that = $(this);
 
-        $('.breadcrumb-container .breadcrumb').append($('.breadcrumbs li'));
+            if (!that.hasClass('data-loaded')) {
+                $.get(template, function (data) {
+                    that.parent().append($(data));
+                    that.parent().find('#confirmButton').attr('data-url', url);
+                    that.addClass('data-loaded');
+                    that.next('.dropdown-menu').dropdown('toggle');
+                }).fail(function (xhr, status, error) {
+                    console.error('Error fetching template:', error);
+                });
+            } else {
+                that.next('.dropdown-menu').dropdown('toggle');
+            }
+        });
     },
+
+    modifyCheckboxes: function () {
+        $('input[type=checkbox]').addClass('form-check-input').wrap('<div class="form-check my-auto"></div>');
+    },
+
+    bindConfirmButton: function () {
+        const that = this;
+
+        $(document).on('click', '#confirmButton', function (event) {
+            event.preventDefault();
+            const parentDiv = $(this).closest('.dropdown-menu');
+            const url = $(this).data('url');
+            const formData = {};
+
+            parentDiv.find('input, select').each(function () {
+                const inputName = $(this).attr('name');
+                const inputValue = $(this).val();
+                formData[inputName] = inputValue;
+            });
+
+            const selectedIds = [];
+            $('tbody tr.selected').each(function () {
+                const id = $(this).find('.action-checkbox input').val();
+                selectedIds.push(id);
+            });
+            formData['selected_ids'] = selectedIds;
+
+            const activeToggleBtn = parentDiv.find('.toggle-button.active');
+            const toggleValue = activeToggleBtn.data('toggle');
+            formData['toggle_value'] = toggleValue;
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                },
+                headers: {
+                    "X-CSRFToken": that.getCookie('csrftoken')
+                }
+            });
+        });
+    },
+    getCookie: function(name) {
+            let value = '; ' + document.cookie,
+                parts = value.split('; ' + name + '=');
+            if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 };
 
 export default ChangeList
