@@ -48,10 +48,6 @@ input[type=submit] {
     width: 300px;
 }
 
-fieldset h2 {
-    display: none;
-}
-
 .nav-tabs .nav-link {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
@@ -62,5 +58,35 @@ fieldset {
         @media (max-width: 500px) {
            display: block !important;
         }
+    }
+
+    h2 {
+        display: none;
+    }
+}
+
+.selector-chooser {
+    list-style-type: none;
+    padding: 10px;
+}
+
+.form-multiline {
+    >div {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+}
+
+.checkbox-row {
+    align-items: center;
+
+    label {
+        margin-bottom: 0px;
+    }
+}
+
+.inline-related {
+    .original {
+        display: none;
     }
 }

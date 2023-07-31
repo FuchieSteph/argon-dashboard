@@ -1,0 +1,35 @@
+.drag-handle {
+    background-image: url(../../mptt/arrow-move-black.png) !important;
+    cursor: move;
+}
+
+.tree-node.children {
+    background-image: url(../../mptt/disclosure-down-black.png) !important;
+}
+
+.tree-node.closed {
+    background-image: url(../../mptt/disclosure-right-black.png) !important;
+}
+
+#result_list tbody tr:focus {
+    background-color: #e3e3e3 !important;
+    outline: 0px;
+}
+
+.mptt-table {
+    border-collapse: separate;
+    border-spacing: 0 1em;
+        
+    tbody tr:focus {
+        background-color: unset !important;
+        outline: 0px;
+    }
+
+    tr, td, th {
+        border: 0px;
+    }
+
+    .mptt-parent {
+        background-color: #e3e3e3 !important;
+    }
+}

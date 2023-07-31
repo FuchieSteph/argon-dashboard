@@ -1,5 +1,6 @@
 const ChangeList = {
   init: function () {
+        this.updateBase();
         this.convertDetailsToSelect2();
         this.handleSelect2Change();
         this.modifyObjectTools();
@@ -9,6 +10,13 @@ const ChangeList = {
         this.bindQuickActionButtons();
         this.modifyCheckboxes();
         this.bindConfirmButton();
+    },
+
+    updateBase: function() {
+        $('#content-main').wrap('<div class="d-md-flex"></div>')
+        $('#content-main').addClass('flex-grow-1 main card p-3')
+        $('#changelist-filter').wrap('<div id="filters-wrapper" class="p-3 px-md-3 w-md-15"></div>').addClass('card p-3')
+        $('#content-main').after($('#filters-wrapper'))
     },
 
     convertDetailsToSelect2: function () {
@@ -25,7 +33,7 @@ const ChangeList = {
             $(element).html('').append('<summary class="text-uppercase fw-bold">' + filterTitle + '</summary>').append(html);
         });
 
-        $('.select2').select2();
+        $('.select2').select2({theme: 'bootstrap-5'});
     },
 
     handleSelect2Change: function () {
@@ -74,6 +82,8 @@ const ChangeList = {
         $('.pagination span').wrap('<div class="page-item active me-2"></div>').addClass('page-link');
         $(".results td, .results th").addClass('text-sm font-weight-bold mb-0');
         $(".results th").addClass('text-uppercase');
+        $('table:has(.tree-node)').addClass('mptt-table').removeClass('table-striped')
+        $('div[style*="text-indent:0px"]').closest('tr').addClass('mptt-parent')
     },
 
     addClickToTableRows: function () {
@@ -107,7 +117,7 @@ const ChangeList = {
     },
 
     modifyCheckboxes: function () {
-        $('input[type=checkbox]').addClass('form-check-input').wrap('<div class="form-check my-auto"></div>');
+        $('input[type=checkbox]').addClass('form-check-input').wrap('<div class="form-check"></div>');
     },
 
     bindConfirmButton: function () {

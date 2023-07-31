@@ -1615,3 +1615,5 @@ $tilt-transform-up-transition:      all 0.5s !default;
 
 // Import Utilities
 @import "utilities";
+
+$utilities: map-merge($utilities, ("width": map-merge(map-get($utilities, "width"), (responsive: true), ), ));

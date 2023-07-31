@@ -11,7 +11,8 @@ const ChangeForm = {
   },
   formatInputs: function() {
     $('form fieldset:not(.inline-related fieldset)').addClass('p-4 mb-3')
-    $('form input:not([type="checkbox"]), form textarea, form select').addClass('form-control');
+    $('form .related-widget-wrapper').addClass('ms-2')
+    $('form input:not([type="checkbox"]), form textarea, form select').addClass('form-control ms-2');
     $('form input[type="checkbox"]').addClass('form-check-input').wrap('<div class="form-check my-auto"></div>');
     $('form label').addClass('form-label');
     $('form .form-check label').addClass('form-check-label');
@@ -49,6 +50,7 @@ const ChangeForm = {
     $('.selector select, .selector input').addClass('form-control');
     $('.selector-remove').html("<i class='bx bxs-left-arrow-circle' ></i>")
     $('.selector-add').html("<i class='bx bxs-right-arrow-circle' ></i>")
+    $('.inline-related table').wrap('<div class="bg-gray-100 p-2"></div>')
   },
   waitForSelectorToLoad: function (element, callback) {
     const checkInterval = 100; 

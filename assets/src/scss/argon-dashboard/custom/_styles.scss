@@ -1,5 +1,7 @@
 @import "calendar";
 @import "forms";
+@import "mptt";
+@import "changeList";
 
 .object-tools {
     display: none;
@@ -77,12 +79,6 @@
 
 .table {
     tr.selected {
-        background-color: navajowhite;
-    }
-}
-
-#changelist-form .dropdown {
-    @media (max-width: 500px) {
-        margin-top: 10px;
+        background-color: #e3e3e3;
     }
 }

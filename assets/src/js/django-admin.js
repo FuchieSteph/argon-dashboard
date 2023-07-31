@@ -1,6 +1,7 @@
 import ChangeList from './core/ChangeList.js'
 import ChangeForm from './core/ChangeForm.js'
 import BreadCrumbs from './core/BreadCrumbs.js'
+import Dashboard from './core/Dashboard.js'
 
 window.BootstrapAdmin = {
   intialized: false,
@@ -18,6 +19,8 @@ window.BootstrapAdmin = {
       ChangeList.init(config)
     } else if (page === 'add_form' || page === 'change_form') {
       ChangeForm.init(config)
+    } else if (page === 'dashboard') {
+      Dashboard.init(config)
     } 
 
     console.info('Bootstrap Admin:', 'ready')
