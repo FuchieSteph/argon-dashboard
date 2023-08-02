@@ -11,12 +11,13 @@ const ChangeForm = {
   },
   formatInputs: function() {
     $('form fieldset:not(.inline-related fieldset)').addClass('p-4 mb-3')
-    $('form .related-widget-wrapper').addClass('ms-2')
+    $('form .related-widget-wrapper').addClass('ms-2 flex-grow-1')
     $('form input:not([type="checkbox"]), form textarea, form select').addClass('form-control ms-2');
     $('form input[type="checkbox"]').addClass('form-check-input').wrap('<div class="form-check my-auto"></div>');
     $('form label').addClass('form-label');
     $('form .form-check label').addClass('form-check-label');
     $('form .form-check').addClass('form-check');
+    $('select').select2({ width: '100%' });
   },
   formatInlines: function() {
     $('h3').addClass('fs-5 d-flex bg-gray-200 p-2 mt-2')

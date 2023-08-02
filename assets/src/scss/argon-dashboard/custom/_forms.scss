@@ -90,3 +90,7 @@ fieldset {
         display: none;
     }
 }
+
+.select2-container--default .select2-selection--single {
+    border: 1px solid #d2d6da !important;
+}

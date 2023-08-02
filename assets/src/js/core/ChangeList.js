@@ -17,6 +17,7 @@ const ChangeList = {
         $('#content-main').addClass('flex-grow-1 main card p-3')
         $('#changelist-filter').wrap('<div id="filters-wrapper" class="p-3 px-md-3 w-md-15"></div>').addClass('card p-3')
         $('#content-main').after($('#filters-wrapper'))
+        $('#filters_block').addClass('col-md-9').removeClass('col-md-12')
     },
 
     convertDetailsToSelect2: function () {
@@ -131,10 +132,15 @@ const ChangeList = {
 
             parentDiv.find('input, select').each(function () {
                 const inputName = $(this).attr('name');
-                const inputValue = $(this).val();
-                formData[inputName] = inputValue;
+                if ($(this).is(':checkbox')) {
+                    const isChecked = $(this).prop('checked');
+                    formData[inputName] = isChecked;
+                } else {
+                    const inputValue = $(this).val();
+                    formData[inputName] = inputValue;
+                }
             });
-
+            
             const selectedIds = [];
             $('tbody tr.selected').each(function () {
                 const id = $(this).find('.action-checkbox input').val();
@@ -151,7 +157,29 @@ const ChangeList = {
                 type: 'POST',
                 data: formData,
                 success: function (response) {
-                    window.location.reload();
+                   if (response.success) {
+                        const updatedData = response.message;
+
+                        for (const data of updatedData) {
+                            if (data.type === 'multiple') {
+                                $('tbody tr.selected').each(function() {
+                                    if($(this).find(`.${data.field}`).find('[data-id="'+data.id+'"]').length == 0) {
+                                        $(this).find(`.${data.field}` + ' .d-flex').append(data.html)
+                                    } else if(formData['toggle_value'] == 'exclude') {
+                                        $(this).find(`.${data.field}`).find('[data-id="'+data.id+'"]').remove();
+                                    }
+                                })
+                            } else {
+                                if(data.field == 'field-is_validated' && data.value == true && window.location.href.indexOf('is_validated,filter,exact,0') > -1) {
+                                    $('tbody tr.selected').remove();
+                                }
+
+                                $('tbody tr.selected').find(`.${data.field}`).text(data.value);
+                            }
+                        }
+                    } else {
+                        console.error('Update failed: ' + response.message);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
@@ -165,7 +193,9 @@ const ChangeList = {
     getCookie: function(name) {
             let value = '; ' + document.cookie,
                 parts = value.split('; ' + name + '=');
-            if (parts.length === 2) return parts.pop().split(';').shift();
+            if (parts.length === 2) {
+              return parts.pop().split(';').shift();
+            }
     }
 };
 
